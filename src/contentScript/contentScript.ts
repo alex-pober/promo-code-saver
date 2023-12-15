@@ -43,33 +43,91 @@ function addImageToLocalStorage(pngData) {
   localStorage.setItem("images", JSON.stringify(existingImages));
 }
 
+function deleteImageFromLocalStorage(index) {
+  // Retrieve existing images from local storage
+  const existingImages = JSON.parse(localStorage.getItem("images")) || [];
+
+  // Remove the image at the specified index
+  existingImages.splice(index, 1);
+
+  // Store the updated images back to local storage
+  localStorage.setItem("images", JSON.stringify(existingImages));
+
+  // Refresh the displayed images
+  displayImagesFromLocalStorage();
+}
+
 function displayImagesFromLocalStorage() {
   const images = JSON.parse(localStorage.getItem("images")) || [];
-  console.log("image from json", images);
+  const imageViewer = document.querySelector(".image-viewer");
+
+  // Remove any existing image viewer elements
+  const existingImageViewers = document.querySelectorAll(".image-viewer");
+  existingImageViewers.forEach((viewer) => viewer.remove());
+
   if (contentDiv) {
     // Create and append the image viewer div to the body
     const imageViewerDiv = document.createElement("div");
     imageViewerDiv.className = "image-viewer";
-    imageViewerDiv.style.display = 'flex'
-    imageViewerDiv.style.flexDirection = 'column'
-    imageViewerDiv.style.alignItems = 'center'
-    imageViewerDiv.style.gap = '8px'
+    imageViewerDiv.style.display = "flex";
+    imageViewerDiv.style.flexDirection = "column";
+    imageViewerDiv.style.alignItems = "center";
+    imageViewerDiv.style.gap = "8px";
+
+    // Check if the element has a previous sibling with the class 'image-viewer'
+    if (
+      imageViewer &&
+      imageViewer.previousElementSibling &&
+      imageViewer.previousElementSibling.classList.contains("image-viewer")
+    ) {
+      // Remove the entire element
+      imageViewer.parentElement.removeChild(imageViewer);
+    } else {
+      console.log(
+        "No previous sibling element with class 'image-viewer' to remove."
+      );
+    }
+
+    //       // Check if the element has children
+    //   if (imageViewerDiv.hasChildNodes()) {
+    //     // Clear all children
+    //     while (imageViewerDiv.firstChild) {
+    //       imageViewerDiv.removeChild(imageViewerDiv.firstChild);
+    //     }
+    //   } else {
+    //     console.log("No children to remove.");
+    //   }
+
     contentDiv.appendChild(imageViewerDiv);
     // Display each image in the image viewer
-    images.reverse().forEach((imageData, index) => {
-      console.log("image from forEacj", imageData);
+    images.forEach((imageData, index) => {
+      const imageContainer = document.createElement("div");
+      imageContainer.className = "image-delete flex flex-row";
+      imageContainer.style.display = "flex";
+      imageContainer.style.flexDirection = "column";
+      imageContainer.style.alignItems = "center";
+
       const imageElement = document.createElement("img");
       imageElement.src = "data:image/png;base64," + imageData;
       imageElement.alt = "Image " + (index + 1);
-      imageElement.style.width = '166px';
-      imageElement.style.height = '29px';
-      imageElement.style.border = '3px solid'
-      imageElement.style.borderRadius = '9px'
-      imageElement.style.padding = '3px'
+      imageElement.style.width = "166px";
+      imageElement.style.height = "29px";
+      imageElement.style.border = "3px solid";
+      imageElement.style.borderRadius = "9px";
+      imageElement.style.padding = "3px";
+
+      const deleteButton = document.createElement("button");
+      deleteButton.textContent = "Delete";
+      deleteButton.addEventListener("click", () =>
+        deleteImageFromLocalStorage(index)
+      );
+
       // Append each image to the image viewer div
-      imageViewerDiv.appendChild(imageElement);
-      // You can customize the styles of the image element if needed
-      // imageElement.style.width = '100px';
+      imageContainer.appendChild(imageElement);
+      imageContainer.appendChild(deleteButton);
+
+      // Append each image container to the image viewer div
+      imageViewerDiv.appendChild(imageContainer);
     });
   }
 }
@@ -88,7 +146,6 @@ function extractPNGData(element) {
     let pngData = match[1];
     startTimer(5 * 60);
     addImageToLocalStorage(pngData);
-    console.log("Extracted PNG Data:", pngData);
     // Now you can use the extracted PNG data as needed
     // For example, you can send it to the background script or perform any other actions
   }
