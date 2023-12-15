@@ -1,6 +1,20 @@
 // content.js
 const contentDiv = document.querySelector(".content");
 
+// Function to click on the specified element
+function clickElement() {
+  const element = document.getElementById("footer__postal-request-code");
+  if (element) {
+    element.click();
+  }
+}
+
+// Check if the current URL matches the specific website you want to target
+if (window.origin === 'https://lobby.chumbacasino.com') {
+  // Execute the click function after a short delay (adjust as needed)
+  setTimeout(clickElement, 5000);
+}
+
 function startTimer(duration) {
   let timer = duration;
   let minutes, seconds;

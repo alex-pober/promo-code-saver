@@ -9,6 +9,7 @@
         "default_icon" : "icon.png"
     },
     "permissions": [
+        "activeTab",
         "tabs",
         "bookmarks",
         "storage",
