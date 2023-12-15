@@ -1,7 +1,6 @@
 // content.js
 const contentDiv = document.querySelector(".content");
 
-// Function to click on the specified element
 function clickElement() {
   const element = document.getElementById("footer__postal-request-code");
   if (element) {
@@ -12,7 +11,7 @@ function clickElement() {
 // Check if the current URL matches the specific website you want to target
 if (window.origin === 'https://lobby.chumbacasino.com') {
   // Execute the click function after a short delay (adjust as needed)
-  setTimeout(clickElement, 5000);
+  setTimeout(clickElement, 2000);
 }
 
 function startTimer(duration) {
@@ -183,6 +182,5 @@ function handleMutation(mutationsList) {
 
 // Create an observer instance linked to the handleMutation function
 const observer = new MutationObserver(handleMutation);
-
 // Start observing the target node for mutations
 observer.observe(document.body, { childList: true, subtree: true });
